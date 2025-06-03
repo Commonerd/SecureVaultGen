@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SecureVaultGen: Smart & Secure ID/Password Generator</title>
+    <meta
+      name="description"
+      content="Generate highly secure, memorable IDs and strong passwords with SecureVaultGen. Protect your digital identity with our unique mnemonic ID generator."
+    />
+    <meta
+      name="keywords"
+      content="secure password generator, strong password, unique ID creator, memorable ID, mnemonic ID, username generator, cryptographically secure random, online security tools, data breach protection, password manager alternative"
+    />
+    <link rel="canonical" href="https://securevaultgen.netlify.app/" />
+
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-size='80' fill='%23007bff'%3E🔐%3C/text%3E%3C/svg%3E"
+      type="image/svg+xml"
+    />
+
+    <style>
+      /* Basic Reset & Typography */
+      body {
+        font-family: "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f7fa;
+        color: #333;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        line-height: 1.6;
+      }
+
+      .container {
+        background-color: #fff;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        width: 90%;
+        max-width: 800px;
+        text-align: center;
+        margin: 20px;
+      }
+
+      h1 {
+        color: #0056b3;
+        margin-bottom: 25px;
+        font-size: 2.5em;
+        font-weight: 700;
+      }
+
+      h2 {
+        color: #007bff;
+        margin-top: 35px;
+        margin-bottom: 20px;
+        font-size: 1.8em;
+      }
+
+      p {
+        margin-bottom: 15px;
+        font-size: 1.1em;
+        color: #555;
+      }
+
+      /* Input & Button Styles */
+      .input-group {
+        margin-bottom: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .input-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #444;
+        flex-basis: 100%; /* For smaller screens */
+      }
+
+      .input-group input[type="number"],
+      .input-group select,
+      .input-group input[type="text"] {
+        width: 100px;
+        padding: 12px 15px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 1em;
+        transition: border-color 0.3s ease;
+      }
+
+      .input-group input[type="number"]:focus,
+      .input-group select:focus,
+      .input-group input[type="text"]:focus {
+        border-color: #007bff;
+        outline: none;
+      }
+
+      .input-group input[type="checkbox"] {
+        margin-right: 8px;
+      }
+
+      .option-group {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 10px;
+        flex-wrap: wrap;
+      }
+
+      button {
+        background-color: #007bff;
+        color: white;
+        padding: 14px 28px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1.1em;
+        font-weight: bold;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        margin-top: 20px;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      .generated-output {
+        background-color: #e9ecef;
+        padding: 20px;
+        border-radius: 8px;
+        margin-top: 30px;
+        border: 1px solid #dee2e6;
+        word-wrap: break-word; /* Ensures long strings wrap */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        gap: 10px;
+      }
+
+      .generated-output span {
+        font-family: "Courier New", monospace;
+        font-size: 1.3em;
+        color: #333;
+        flex-grow: 1; /* Allows the text to take available space */
+        text-align: left;
+      }
+
+      .copy-button {
+        background-color: #28a745;
+        color: white;
+        padding: 8px 15px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.9em;
+        transition: background-color 0.3s ease;
+        flex-shrink: 0; /* Prevents button from shrinking */
+      }
+
+      .copy-button:hover {
+        background-color: #218838;
+      }
+
+      .copy-button.copied {
+        background-color: #6c757d;
+      }
+
+      .saved-items {
+        margin-top: 40px;
+        text-align: left;
+        border-top: 1px solid #eee;
+        padding-top: 30px;
+      }
+
+      .saved-items h3 {
+        color: #007bff;
+        margin-bottom: 20px;
+        font-size: 1.5em;
+      }
+
+      .saved-item {
+        background-color: #f8f9fa;
+        border: 1px solid #e2e6ea;
+        padding: 15px;
+        margin-bottom: 12px;
+        border-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: "Courier New", monospace;
+        font-size: 1.1em;
+      }
+
+      .saved-item button {
+        background-color: #dc3545;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 0.9em;
+        margin-top: 0;
+        transition: background-color 0.3s ease;
+      }
+
+      .saved-item button:hover {
+        background-color: #c82333;
+      }
+
+      .ad-placeholder {
+        background-color: #e0e0e0;
+        border: 1px dashed #bbb;
+        padding: 20px;
+        margin-top: 40px;
+        text-align: center;
+        font-size: 1.2em;
+        color: #777;
+        height: 250px; /* Standard ad size */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        max-width: 728px; /* For leaderboards */
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      /* Responsive Adjustments */
+      @media (max-width: 768px) {
+        .container {
+          padding: 30px;
+        }
+
+        h1 {
+          font-size: 2em;
+        }
+
+        h2 {
+          font-size: 1.5em;
+        }
+
+        .input-group label {
+          flex-basis: auto; /* Revert for larger screens, but keep the margin-bottom */
+        }
+
+        .input-group input[type="number"],
+        .input-group select,
+        .input-group input[type="text"] {
+          width: 80px;
+          padding: 10px;
+        }
+
+        button {
+          padding: 12px 24px;
+          font-size: 1em;
+        }
+
+        .generated-output span {
+          font-size: 1.1em;
+        }
+
+        .copy-button {
+          padding: 6px 12px;
+          font-size: 0.8em;
+        }
+
+        .option-group {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .ad-placeholder {
+          max-width: 300px; /* For mobile ads */
+          height: 100px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>SecureVaultGen: Smart & Secure Identity Generator</h1>
+      <p>
+        Generate highly secure, unique IDs and strong passwords to protect your
+        digital life.
+      </p>
+      <p>Enhance your online security and never reuse passwords again.</p>
+
+      <div class="ad-placeholder">
+        [Your Google AdSense Code Here - Top Banner 728x90 or 320x50]
+      </div>
+
+      <h2>Strong Password Generator</h2>
+      <div class="input-group">
+        <label for="passwordLength">Length:</label>
+        <input type="number" id="passwordLength" value="16" min="8" max="128" />
+
+        <div class="option-group">
+          <label
+            ><input type="checkbox" id="includeUppercase" checked />
+            Uppercase</label
+          >
+          <label
+            ><input type="checkbox" id="includeLowercase" checked />
+            Lowercase</label
+          >
+          <label
+            ><input type="checkbox" id="includeNumbers" checked />
+            Numbers</label
+          >
+          <label
+            ><input type="checkbox" id="includeSymbols" checked />
+            Symbols</label
+          >
+        </div>
+      </div>
+      <button id="generatePassword">Generate Strong Password</button>
+      <div class="generated-output" id="passwordOutputGroup">
+        <span id="passwordOutput">Click 'Generate Strong Password'</span>
+        <button
+          class="copy-button"
+          onclick="copyToClipboard('passwordOutput', this)"
+        >
+          Copy
+        </button>
+      </div>
+
+      <h2>Unique Mnemonic ID Generator</h2>
+      <p>Create unique, memorable, yet secure IDs based on various themes.</p>
+      <div class="input-group">
+        <label for="idCategory">Category:</label>
+        <select id="idCategory">
+          <option value="nature">Nature</option>
+          <option value="history">History</option>
+          <option value="literature">Literature</option>
+          <option value="tech">Technology</option>
+          <option value="custom">Custom Keywords</option>
+        </select>
+        <label for="idLength">Word Count:</label>
+        <input type="number" id="idLength" value="3" min="2" max="5" />
+        <input
+          type="text"
+          id="customKeywords"
+          placeholder="Comma separated keywords"
+          style="display: none"
+        />
+      </div>
+      <button id="generateMnemonicID">Generate Mnemonic ID</button>
+      <div class="generated-output" id="idOutputGroup">
+        <span id="idOutput">Click 'Generate Mnemonic ID'</span>
+        <button class="copy-button" onclick="copyToClipboard('idOutput', this)">
+          Copy
+        </button>
+      </div>
+
+      <div class="ad-placeholder">
+        [Your Google AdSense Code Here - In-article Ad or Square Ad 300x250]
+      </div>
+
+      <div class="saved-items">
+        <h3>Your Saved Generations (Local Storage)</h3>
+        <p>
+          Your generated IDs and passwords are saved in your browser for easy
+          access. This data is not sent to our servers.
+        </p>
+        <div id="savedList">
+          <p>No items saved yet.</p>
+        </div>
+      </div>
+
+      <div class="ad-placeholder">
+        [Your Google AdSense Code Here - Bottom Banner 728x90 or 320x50]
+      </div>
+    </div>
+
+    <script>
+      const passwordLengthInput = document.getElementById("passwordLength");
+      const includeUppercaseCheckbox =
+        document.getElementById("includeUppercase");
+      const includeLowercaseCheckbox =
+        document.getElementById("includeLowercase");
+      const includeNumbersCheckbox = document.getElementById("includeNumbers");
+      const includeSymbolsCheckbox = document.getElementById("includeSymbols");
+      const generatePasswordButton =
+        document.getElementById("generatePassword");
+      const passwordOutput = document.getElementById("passwordOutput");
+
+      const idCategorySelect = document.getElementById("idCategory");
+      const idLengthInput = document.getElementById("idLength");
+      const customKeywordsInput = document.getElementById("customKeywords");
+      const generateMnemonicIDButton =
+        document.getElementById("generateMnemonicID");
+      const idOutput = document.getElementById("idOutput");
+
+      const savedList = document.getElementById("savedList");
+
+      const uppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      const lowercaseChars = "abcdefghijklmnopqrstuvwxyz";
+      const numberChars = "0123456789";
+      const symbolChars = "!@#$%^&*()_-+=[]{}|;:,.<>?";
+
+      // Mnemonic word lists (simplified for example)
+      const mnemonicWords = {
+        nature: [
+          "Forest",
+          "Mountain",
+          "River",
+          "Ocean",
+          "Sky",
+          "Desert",
+          "Valley",
+          "Island",
+          "Cloud",
+          "Star",
+          "Bloom",
+          "Whisper",
+          "Glimmer",
+          "Echo",
+          "Drift",
+          "Soar",
+          "Roam",
+          "Wander",
+          "Ripple",
+          "Cascade",
+          "Aurora",
+          "Blizzard",
+          "Canyon",
+          "Cyclone",
+          "Drizzle",
+          "Glacier",
+          "Horizon",
+          "Monsoon",
+          "Tundra",
+          "Volcano",
+        ],
+        history: [
+          "Ancient",
+          "Empire",
+          "Legacy",
+          "Chronicle",
+          "Dynasty",
+          "Conquest",
+          "Revolution",
+          "Era",
+          "Epoch",
+          "Saga",
+          "Pioneer",
+          "Discover",
+          "Innovate",
+          "Unearth",
+          "Decipher",
+          "Forged",
+          "Vanguard",
+          "Heritage",
+          "Relic",
+          "Triumph",
+        ],
+        literature: [
+          "Mythic",
+          "Verse",
+          "Legend",
+          "Fable",
+          "Tale",
+          "Narrative",
+          "Chapter",
+          "Prose",
+          "Quill",
+          "Scroll",
+          "Enigma",
+          "Whispers",
+          "Journey",
+          "Oracle",
+          "Riddle",
+          "Alchemy",
+          "Epic",
+          "Paradox",
+          "Mirage",
+          "Symphony",
+        ],
+        tech: [
+          "Quantum",
+          "Binary",
+          "Digital",
+          "Cyber",
+          "Algorithm",
+          "Network",
+          "Pixel",
+          "Vector",
+          "Circuit",
+          "Code",
+          "Encrypt",
+          "Decrypt",
+          "Automate",
+          "Innovate",
+          "Optimize",
+          "Synergy",
+          "Catalyst",
+          "Protocol",
+          "Gateway",
+          "Interface",
+        ],
+      };
+
+      // --- Password Generator Logic ---
+      function generatePassword() {
+        let chars = "";
+        if (includeUppercaseCheckbox.checked) chars += uppercaseChars;
+        if (includeLowercaseCheckbox.checked) chars += lowercaseChars;
+        if (includeNumbersCheckbox.checked) chars += numberChars;
+        if (includeSymbolsCheckbox.checked) chars += symbolChars;
+
+        if (chars.length === 0) {
+          passwordOutput.textContent = "Select at least one character type.";
+          return;
+        }
+
+        let password = "";
+        const length = passwordLengthInput.value;
+        for (let i = 0; i < length; i++) {
+          password += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        passwordOutput.textContent = password;
+        saveGeneration("password", password);
+      }
+
+      generatePasswordButton.addEventListener("click", generatePassword);
+
+      // --- Mnemonic ID Generator Logic ---
+      idCategorySelect.addEventListener("change", () => {
+        if (idCategorySelect.value === "custom") {
+          customKeywordsInput.style.display = "inline-block";
+        } else {
+          customKeywordsInput.style.display = "none";
+        }
+      });
+
+      function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+      }
+
+      function generateMnemonicID() {
+        const category = idCategorySelect.value;
+        const wordCount = idLengthInput.value;
+        let words = [];
+
+        if (category === "custom") {
+          const customInput = customKeywordsInput.value.trim();
+          if (!customInput) {
+            idOutput.textContent = "Please enter custom keywords.";
+            return;
+          }
+          words = customInput
+            .split(",")
+            .map((word) => word.trim())
+            .filter((word) => word.length > 0);
+          if (words.length < wordCount) {
+            idOutput.textContent = `Please enter at least ${wordCount} custom keywords.`;
+            return;
+          }
+        } else {
+          words = mnemonicWords[category];
+          if (!words || words.length < wordCount) {
+            idOutput.textContent =
+              "Insufficient words for selected category/length.";
+            return;
+          }
+        }
+
+        let generatedIDParts = [];
+        let tempWords = [...words]; // Create a copy to avoid modifying original array
+
+        for (let i = 0; i < wordCount; i++) {
+          if (tempWords.length === 0) break; // Should not happen if wordCount is valid
+
+          const randomIndex = Math.floor(Math.random() * tempWords.length);
+          let selectedWord = tempWords.splice(randomIndex, 1)[0]; // Remove word to ensure uniqueness
+
+          // Add some random variation to make it more complex
+          if (Math.random() < 0.3) {
+            // 30% chance to add a random number
+            selectedWord += Math.floor(Math.random() * 100);
+          } else if (Math.random() < 0.2) {
+            // 20% chance to add a random symbol
+            selectedWord += symbolChars.charAt(
+              Math.floor(Math.random() * symbolChars.length)
+            );
+          } else if (Math.random() < 0.1) {
+            // 10% chance to lowercase first letter for variation
+            selectedWord =
+              selectedWord.charAt(0).toLowerCase() + selectedWord.slice(1);
+          } else {
+            selectedWord = capitalizeFirstLetter(selectedWord);
+          }
+          generatedIDParts.push(selectedWord);
+        }
+
+        const generatedID = generatedIDParts.join(""); // Join without spaces for strong ID
+        idOutput.textContent = generatedID;
+        saveGeneration("mnemonic_id", generatedID);
+      }
+
+      generateMnemonicIDButton.addEventListener("click", generateMnemonicID);
+
+      // --- Copy to Clipboard Function ---
+      function copyToClipboard(elementId, buttonElement) {
+        const element = document.getElementById(elementId);
+        const textToCopy = element.textContent;
+
+        navigator.clipboard
+          .writeText(textToCopy)
+          .then(() => {
+            const originalText = buttonElement.textContent;
+            buttonElement.textContent = "Copied!";
+            buttonElement.classList.add("copied");
+            setTimeout(() => {
+              buttonElement.textContent = originalText;
+              buttonElement.classList.remove("copied");
+            }, 1500);
+          })
+          .catch((err) => {
+            console.error("Failed to copy: ", err);
+            alert("Failed to copy. Please try again or copy manually.");
+          });
+      }
+
+      // --- Local Storage (Persistent Browse) ---
+      function getSavedGenerations() {
+        try {
+          const saved = localStorage.getItem("secureVaultGenerations");
+          return saved ? JSON.parse(saved) : [];
+        } catch (e) {
+          console.error("Error reading from local storage:", e);
+          return [];
+        }
+      }
+
+      function saveGeneration(type, value) {
+        const generations = getSavedGenerations();
+        const now = new Date();
+        generations.unshift({
+          type: type,
+          value: value,
+          timestamp: now.toLocaleString(),
+        }); // Add to the beginning
+        // Keep only the latest 10 items to prevent excessive storage
+        const limitedGenerations = generations.slice(0, 10);
+        try {
+          localStorage.setItem(
+            "secureVaultGenerations",
+            JSON.stringify(limitedGenerations)
+          );
+          renderSavedGenerations(); // Re-render the list
+        } catch (e) {
+          console.error("Error saving to local storage:", e);
+          alert(
+            "Could not save your generation. Local storage might be full or disabled."
+          );
+        }
+      }
+
+      function deleteGeneration(index) {
+        let generations = getSavedGenerations();
+        generations.splice(index, 1); // Remove item at index
+        try {
+          localStorage.setItem(
+            "secureVaultGenerations",
+            JSON.stringify(generations)
+          );
+          renderSavedGenerations(); // Re-render the list
+        } catch (e) {
+          console.error("Error deleting from local storage:", e);
+        }
+      }
+
+      function renderSavedGenerations() {
+        const generations = getSavedGenerations();
+        savedList.innerHTML = "";
+        if (generations.length === 0) {
+          savedList.innerHTML = "<p>No items saved yet.</p>";
+          return;
+        }
+        generations.forEach((item, index) => {
+          const itemDiv = document.createElement("div");
+          itemDiv.classList.add("saved-item");
+          itemDiv.innerHTML = `
+                    <span>[${item.type === "password" ? "PW" : "ID"}] ${
+            item.value
+          } <br><small>(${item.timestamp})</small></span>
+                    <button onclick="deleteGeneration(${index})">Delete</button>
+                `;
+          savedList.appendChild(itemDiv);
+        });
+      }
+
+      // Initial render of saved items on page load
+      document.addEventListener("DOMContentLoaded", renderSavedGenerations);
+    </script>
+  </body>
+</html>
